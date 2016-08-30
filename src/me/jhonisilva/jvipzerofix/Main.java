@@ -24,24 +24,22 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     private void onCmd(PlayerCommandPreprocessEvent e) {
-        if ((e.getMessage().toLowerCase().startsWith("/vipzero") || e.getMessage().toLowerCase().startsWith("/bukkit:vipzero") || e.getMessage().toLowerCase().startsWith("/usekey") || e.getMessage().toLowerCase().startsWith("/usarkey") || e.getMessage().toLowerCase().startsWith("/vipzero:usarkey") || e.getMessage().toLowerCase().startsWith("/vipzero:usekey"))) {
-            if (!valida(e.getMessage().toLowerCase())) {
-                e.setCancelled(true);
+        //O bug é no pagseguro, portanto deve ser checado neste comando
+        if (e.getMessage().startsWith("/vipzero pagseguro ")) {
+			String[] args = e.getMessage().split(" ");
+			//só verificar o length do arg que vai o código de transação
+			//padrão pagseguro (com hífen) = 36 caracteres
+			//se for diferente disso, cancelar o evento
+			//eficaz para evitar caracteres especiais após o código
+			if (args[2].length() != 36) {
+			    e.setCancelled(true);
                 Player p = e.getPlayer();
                 for (Player p1 : Bukkit.getOnlinePlayers()) {
                     if (p1.isOp()) {
                         p1.sendMessage(ChatColor.GRAY + "[" + ChatColor.RED + "JVIPZeroFIX" + ChatColor.GRAY + "]" + ChatColor.RED + " O jogador " + p.getName() + " tentou se aproveitar da falha no VipZero.");
                     }
                 }
-            }
-        }
-    }
-
-    public boolean valida(String msg) {
-        String p = "^\\/[a-zA-Z0-9\\s\\-]*$";
-        if (msg.matches(p)) {
-            return true;
-        }
-        return false;
+			}
+		}
     }
 }
